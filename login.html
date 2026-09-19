@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Login Form</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, sans-serif;
+        }
+
+        body{
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#f4f4f4;
+        }
+
+        .login-container{
+            width:350px;
+            background:#fff;
+            padding:30px;
+            border-radius:12px;
+            box-shadow:0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .login-container h2{
+            text-align:center;
+            margin-bottom:25px;
+            color:#333;
+        }
+
+        .input-group{
+            position:relative;
+            margin-bottom:20px;
+        }
+
+        .input-group i{
+            position:absolute;
+            top:50%;
+            left:12px;
+            transform:translateY(-50%);
+            color:#777;
+        }
+
+        .input-group input{
+            width:100%;
+            padding:12px 12px 12px 40px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            outline:none;
+            font-size:14px;
+        }
+
+        .options{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+            font-size:14px;
+        }
+
+        .options a{
+            text-decoration:none;
+            color:#007bff;
+        }
+
+        .options a:hover{
+            text-decoration:underline;
+        }
+
+        .login-btn{
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:8px;
+            background:#007bff;
+            color:#fff;
+            font-size:16px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .login-btn:hover{
+            background:#0056b3;
+        }
+
+        .register{
+            text-align:center;
+            margin-top:18px;
+            font-size:14px;
+        }
+
+        .register a{
+            color:#007bff;
+            text-decoration:none;
+            font-weight:bold;
+        }
+
+        .register a:hover{
+            text-decoration:underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login</h2>
+
+        <form method="POST" action="/login">
+            <input type="hidden" name="_token" id="csrf_token" value="" />
+            <input type="hidden" name="_method" value="POST" />
+
+            <!-- Username -->
+            <div class="input-group">
+                <i class="fa fa-user"></i>
+                <input type="text" name="email" placeholder="Email or Username" required>
+            </div>
+
+            <!-- Password -->
+            <div class="input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="options">
+                <label>
+                    <input type="checkbox" name="remember"> Remember Me
+                </label>
+
+                <a href="/forgot-password">Forgot Password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" class="login-btn">
+                <i class="fa fa-sign-in-alt"></i> Login
+            </button>
+
+            <!-- Register -->
+            <div class="register">
+                Don't have an account?
+                <a href="/register">Register</a>
+            </div>
+        </form>
+
+        <script>
+            fetch('/csrf-token')
+                .then(r => r.json())
+                .then(d => document.getElementById('csrf_token').value = d.token);
+        </script>
+    </div>
+
+</body>
+</html>

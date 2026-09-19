@@ -1,0 +1,68 @@
+services:
+  - type: web
+    name: hrms
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: APP_NAME
+        value: HRMS
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://hrms.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: hrms-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: hrms-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: hrms-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: hrms-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: hrms-db
+          property: password
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: FILESYSTEM_DISK
+        value: s3
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        value: auto
+      - key: AWS_BUCKET
+        sync: false
+      - key: AWS_ENDPOINT
+        sync: false
+      - key: AWS_USE_PATH_STYLE_ENDPOINT
+        value: true
+      - key: RUN_SEEDER
+        value: true
+databases:
+  - name: hrms-db
+    plan: free
+    databaseName: hrms
+    user: hrms
