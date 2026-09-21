@@ -1,7 +1,7 @@
 FROM composer:2 AS composer-deps
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --ignore-platform-reqs --no-scripts
+RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction --no-progress --ignore-platform-reqs
 COPY . .
 RUN composer dump-autoload --optimize --no-dev --no-scripts
 
