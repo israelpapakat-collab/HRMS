@@ -1,18 +1,36 @@
 FROM composer:2 AS composer-deps
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --ignore-platform-reqs
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --ignore-platform-reqs --no-scripts
 COPY . .
-RUN composer dump-autoload --optimize --no-dev
+RUN composer dump-autoload --optimize --no-dev --no-scripts
+
 FROM node:20-alpine AS node-build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci --prefer-offline
+RUN npm ci
 COPY . .
 RUN npm run build
+
 FROM php:8.2-fpm-alpine
-RUN apk add --no-cache nginx supervisor bash curl libpng-dev libzip-dev libxml2-dev postgresql-dev oniguruma-dev icu-dev
-RUN docker-php-ext-configure intl && docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring xml zip gd bcmath intl opcache
+RUN apk add --no-cache \
+    nginx \
+    supervisor \
+    bash \
+    curl \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    libzip-dev \
+    libxml2-dev \
+    postgresql-dev \
+    oniguruma-dev \
+    icu-dev
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring xml zip gd bcmath intl opcache
+
 WORKDIR /var/www/html
 COPY --from=composer-deps /app /var/www/html
 COPY --from=node-build /app/public/build /var/www/html/public/build

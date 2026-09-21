@@ -10,6 +10,7 @@ sed -i "s/listen [0-9]\+;/listen ${PORT};/g" /etc/nginx/http.d/default.conf
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+php artisan package:discover --ansi 2>/dev/null || true
 php artisan storage:link 2>/dev/null || true
 php artisan config:cache
 php artisan route:cache
