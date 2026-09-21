@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 FROM php:8.2-fpm-alpine
 RUN apk add --no-cache nginx supervisor bash curl libpng-dev libzip-dev libxml2-dev postgresql-dev oniguruma-dev icu-dev
-RUN docker-php-ext-configure intl && docker-php-ext-install pdo pdo_pgsql pgsql mbstring xml zip gd bcmath intl opcache
+RUN docker-php-ext-configure intl && docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring xml zip gd bcmath intl opcache
 WORKDIR /var/www/html
 COPY --from=composer-deps /app /var/www/html
 COPY --from=node-build /app/public/build /var/www/html/public/build
