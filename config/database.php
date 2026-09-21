@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', (str_starts_with(env('DATABASE_URL', ''), 'postgres') || str_starts_with(env('DB_URL', ''), 'postgres')) ? 'pgsql' : 'sqlite'),
 
     /*
     |--------------------------------------------------------------------------
