@@ -13,23 +13,25 @@ COPY . .
 RUN npm run build
 
 FROM php:8.2-fpm-alpine
-RUN apk add --no-cache \
-    nginx \
-    supervisor \
-    bash \
-    curl \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    libzip-dev \
-    libxml2-dev \
-    postgresql-dev \
-    oniguruma-dev \
-    icu-dev
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install pdo pdo_pgsql pgsql pdo_mysql mbstring xml zip gd bcmath intl opcache
+# Install web server, process manager, and system tools
+RUN apk add --no-cache nginx supervisor bash curl
+
+# Install official PHP extension helper
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+# Install PHP extensions required by Laravel & HRMS
+RUN install-php-extensions \
+    pdo_pgsql \
+    pgsql \
+    pdo_mysql \
+    mbstring \
+    xml \
+    zip \
+    gd \
+    bcmath \
+    intl \
+    opcache
 
 WORKDIR /var/www/html
 COPY --from=composer-deps /app /var/www/html
